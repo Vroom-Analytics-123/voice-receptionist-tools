@@ -1,0 +1,3 @@
+# Test dependency only. The voice_tools runtime itself is stdlib-only
+# (concurrent.futures, dataclasses, datetime, re) -- no API keys, no network.
+pytest>=8
