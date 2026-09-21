@@ -1,12 +1,8 @@
-# voice-receptionist-tools
+# AI voice agent & AI receptionist tools — Vapi, Twilio, Retell
 
-Example external-tool integrations for an AI voice receptionist (Vapi / Twilio-style stacks) —
-the engineering that decides whether calls get **resolved or dropped**.
-
-> **Interactive demo:** _coming soon — will be linked here_
-> (`https://staging.vroomanalytics.com/automation-demo/`)
->
-> **Companion article:** _coming soon — will be linked here_
+Production-grade external-tool integrations for an AI voice receptionist on
+**Vapi**, **Twilio**, or **Retell** — the engineering that decides whether calls
+get **resolved or dropped**.
 
 Built by [Vroom Analytics](https://vroomanalytics.com) as public proof for our
 **AI voice-receptionist service** — *"Never miss another call."*
@@ -38,7 +34,7 @@ pattern we use on every voice build to prevent them — one hard rule, enforced 
 ```
                     +----------------------+
                     |  Voice platform      |
-                    |  (Vapi / Twilio)     |
+                    | (Vapi/Twilio/Retell) |
                     +----------+-----------+
                                | function calls
                                v
@@ -81,12 +77,14 @@ never in tool logic. Each interface documents its **PRODUCTION SEAM**.
 voice-receptionist-tools/
 ├── src/voice_tools/
 │   ├── runtime.py            # ToolRuntime: timeout/retry/fallback/handoff + Vapi schemas
+│   ├── retell.py             # Retell AI wiring: custom-function defs + webhook handler
 │   └── adapters/
 │       ├── base.py           # Adapter interfaces + domain exceptions + PRODUCTION SEAM notes
 │       └── simulated.py      # In-memory adapters (latency/failure injection for tests)
 ├── tests/
 │   ├── test_runtime.py       # timeout → fallback; retry recovery; unresolvable → handoff
-│   └── test_tools.py         # conflict → alternatives; validation; CRM degradation
+│   ├── test_tools.py         # conflict → alternatives; validation; CRM degradation
+│   └── test_retell.py        # Retell defs mirror runtime (no drift); webhook routing; never-guess on Retell path
 ├── requirements.txt          # pytest only -- the runtime itself is stdlib
 ├── LICENSE                   # MIT
 └── README.md
@@ -100,7 +98,7 @@ pip install -r requirements.txt
 pytest -q
 ```
 
-Expected: `16 passed`. The suite covers the four failure shapes that sink
+Expected: `23 passed`. The suite covers the four failure shapes that sink
 voice deployments in production:
 
 1. **Tool timeout → fallback fires** (slow calendar degrades to a callback offer, never hangs the call)
@@ -109,9 +107,11 @@ voice deployments in production:
 4. **Booking conflict → offers alternatives** (taken slot surfaces real openings; the taken slot is never re-offered)
 
 Plus: retry recovery on flaky backends, stale-cache CRM answers flagged and phrased
-as questions, and Vapi-compatible function schemas (`runtime.function_schemas()`)
-so the tools drop into an assistant config unchanged — wire `dispatch()` behind
-your function-call endpoint.
+as questions, Vapi-compatible function schemas (`runtime.function_schemas()`)
+so the tools drop into a Vapi assistant config unchanged — wire `dispatch()`
+behind your function-call endpoint — and the Retell equivalent
+(`retell.retell_function_definitions()` + `retell.handle_function_call()`)
+so the same runtime drives Retell custom functions with zero tool-logic changes.
 
 ## Projected platform costs
 
@@ -129,6 +129,16 @@ verify against current Twilio / voice-provider pricing before quoting:
 
 Our managed-care plan bundles these under one monthly fee so the client never
 thinks about per-minute metering after launch.
+
+## Monthly peace of mind
+
+Setup is just day one. The **$99/mo care plan** keeps this running —
+monitoring, fixes, and monthly optimization, so you never think about it again.
+It's the same plan behind every voice build we ship, and it's how a voice
+receptionist stays a solved problem instead of becoming a second job.
+
+See the full offer, packages, and the care plan here:
+**https://vroomanalytics.com/voice-receptionist/**
 
 ## What not to automate
 
