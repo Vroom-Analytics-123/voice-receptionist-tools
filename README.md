@@ -1,5 +1,10 @@
 # AI voice agent & AI receptionist tools — Vapi, Twilio, Retell
 
+![Tests](https://img.shields.io/badge/tests-passing-2ea44f)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Python](https://img.shields.io/badge/python-3.11%2B-3776ab)
+![Vapi](https://img.shields.io/badge/voice-Vapi%20%7C%20Twilio%20%7C%20Retell-6d28d9)
+
 Production-grade external-tool integrations for an AI voice receptionist on
 **Vapi**, **Twilio**, or **Retell** — the engineering that decides whether calls
 get **resolved or dropped**.
@@ -8,6 +13,8 @@ Built by [Vroom Analytics](https://vroomanalytics.com) as public proof for our
 **AI voice-receptionist service** — *"Never miss another call."*
 
 ---
+
+![Voice receptionist tools demo](assets/demo.gif)
 
 ## The problem
 
